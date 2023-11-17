@@ -12,12 +12,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import java.util.List;
 
 /**
  *
@@ -31,6 +33,9 @@ public class View extends javax.swing.JFrame {
     // Registros y memoria
     private Map<String, Integer> registros = new HashMap<>();
     private Map<Integer, Integer> memoria = new HashMap<>();
+    // Historial de estados
+    private  List<String> historial = new ArrayList<>();
+    String estado="";
 
     public View() {
         initComponents();
@@ -39,9 +44,12 @@ public class View extends javax.swing.JFrame {
         registros.put("R2", 0);
         registros.put("R3", 0);
 
-        memoria.put(0, 10);
-        memoria.put(1, 20);
-        memoria.put(2, 30);
+        int m0= Integer.parseInt(JOptionPane.showInputDialog("Ingresa un valor para la dirección de memoria 0"));
+        int m1= Integer.parseInt(JOptionPane.showInputDialog("Ingresa un valor para la dirección de memoria 1"));
+        int m2= Integer.parseInt(JOptionPane.showInputDialog("Ingresa un valor para la dirección de memoria 2"));
+        memoria.put(0, m0);
+        memoria.put(1, m1);
+        memoria.put(2, m2);
     }
 
     /**
@@ -58,14 +66,29 @@ public class View extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_editor = new javax.swing.JTextArea();
         panel_inferior = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txt_consola = new javax.swing.JTextArea();
+        jLabel10 = new javax.swing.JLabel();
+        btn_guardar3 = new javax.swing.JButton();
         btn_validar = new javax.swing.JButton();
         btn_ejecutar = new javax.swing.JButton();
         btn_cargar = new javax.swing.JButton();
         btn_guardar = new javax.swing.JButton();
+        btn_guardar1 = new javax.swing.JButton();
+        btn_guardar2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,15 +98,44 @@ public class View extends javax.swing.JFrame {
 
         panel_inferior.setBackground(new java.awt.Color(102, 102, 102));
 
+        txt_consola.setColumns(20);
+        txt_consola.setRows(5);
+        jScrollPane3.setViewportView(txt_consola);
+
+        jLabel10.setText("Consola de Resultados:");
+
+        btn_guardar3.setText("Limpiar Consola");
+        btn_guardar3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardar3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_inferiorLayout = new javax.swing.GroupLayout(panel_inferior);
         panel_inferior.setLayout(panel_inferiorLayout);
         panel_inferiorLayout.setHorizontalGroup(
             panel_inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(panel_inferiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addGroup(panel_inferiorLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_guardar3)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         panel_inferiorLayout.setVerticalGroup(
             panel_inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_inferiorLayout.createSequentialGroup()
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addGroup(panel_inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(btn_guardar3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48))
         );
 
         btn_validar.setText("Validar");
@@ -114,12 +166,25 @@ public class View extends javax.swing.JFrame {
             }
         });
 
+        btn_guardar1.setText("Limpiar Editor");
+        btn_guardar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardar1ActionPerformed(evt);
+            }
+        });
+
+        btn_guardar2.setText("Limpiar Todo");
+        btn_guardar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardar2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_inferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btn_validar)
@@ -129,7 +194,12 @@ public class View extends javax.swing.JFrame {
                 .addComponent(btn_cargar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_guardar)
-                .addContainerGap(626, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_guardar1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_guardar2)
+                .addContainerGap(778, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,10 +208,12 @@ public class View extends javax.swing.JFrame {
                     .addComponent(btn_validar)
                     .addComponent(btn_ejecutar)
                     .addComponent(btn_cargar)
-                    .addComponent(btn_guardar))
+                    .addComponent(btn_guardar)
+                    .addComponent(btn_guardar1)
+                    .addComponent(btn_guardar2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panel_inferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -156,7 +228,7 @@ public class View extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1389, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,15 +237,70 @@ public class View extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Instrucciones", jPanel2);
 
+        jLabel1.setText("Universidad Nacional de Ingenería UNI");
+
+        jLabel2.setText("Simulador de CPU, Arquitectua de 3 Direcciones");
+
+        jLabel3.setText("4T1-CO - Arquitectura de Máquinas II");
+
+        jLabel4.setText("Integrantes:");
+
+        jLabel5.setText("Alexha Carolina López Rocha ");
+
+        jLabel6.setText("Zharoon Nazareth Tremino Castellón");
+
+        jLabel7.setText("Victor Hugo Romero Rocha");
+
+        jLabel8.setText("Karen Sofia Gaitan Aguilar");
+
+        jLabel9.setText("William Roberto Cáceres Ballesteros");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 982, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(341, 341, 341)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(306, 306, 306)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(345, 345, 345)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))))
+                .addContainerGap(767, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 597, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addGap(27, 27, 27)
+                .addComponent(jLabel3)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addContainerGap(311, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Acerca de", jPanel3);
@@ -270,7 +397,7 @@ public class View extends javax.swing.JFrame {
 
     private void btn_ejecutarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ejecutarActionPerformed
         // Programa con instrucciones
-        String[] program = {
+        /*String[] program = {
             "LOAD R1 Mem[0] R1",
             "LOAD R2 Mem[1] R2",
             "LOAD R3 Mem[2] R3",
@@ -279,20 +406,62 @@ public class View extends javax.swing.JFrame {
             "STORE Men[0] R1",
             "MUL R1 R2 R3",
             "PRINT Men[0]"
-        };
+        };*/
+        
+        String [] program = this.txt_editor.getText().split("\n");
+        
+        
 
         for (String instruction : program) {
             //dividimos la instruccion en diferentes lineas
             ejecutarInstruccion(instruction);
             // Imprimir estado después de la ejecución
-            imprimirEstado();
+            
+            //this.txt_consola.setText(this.estado);
+            //imprimirEstado();
+            printState(this.registros, this.memoria);
             //dentro de cada linea obtenemos los parámetros
+            this.txt_consola.setText(this.estado);
+            System.out.println(estado);
         }
+        
     }//GEN-LAST:event_btn_ejecutarActionPerformed
+
+    private void btn_guardar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardar1ActionPerformed
+        // TODO add your handling code here:
+        this.txt_editor.setText("");
+    }//GEN-LAST:event_btn_guardar1ActionPerformed
+
+    private void btn_guardar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardar2ActionPerformed
+        // TODO add your handling code here:
+        this.txt_consola.setText("");
+        this.txt_editor.setText("");
+    }//GEN-LAST:event_btn_guardar2ActionPerformed
+
+    private void btn_guardar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardar3ActionPerformed
+        // TODO add your handling code here:
+        this.txt_consola.setText("");
+    }//GEN-LAST:event_btn_guardar3ActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    public void printState(Map<String, Integer> registros, Map<Integer, Integer> memoria) {
+        this.estado += "Registros: " + registros +"\n"
+                + " | Memoria: " + memoria +"\n----------------------------------\n";
+
+        // Agregar el estado actual al historial
+        historial.add(estado);
+
+        // Actualizar el texto del JLabel
+    }
+    
+    // Nueva función para obtener el historial completo
+    public  List<String> getHistorial() {
+        return historial;
+    }
+
+   
     public static void processInstruction(String instruction) {
         /*
     recibimos la linea de la instrucción, 
@@ -390,7 +559,7 @@ public class View extends javax.swing.JFrame {
 
             // Obtener valores desde los registros
             int valor1 = registros.get(registroFuente1);
-            int valor2 = registros.get(registroFuente2);
+              int valor2 = registros.get(registroFuente2);
 
             // Realizar la resta y almacenar en el registro de destino
             registros.put(registroDestino, valor1 / valor2);
@@ -423,6 +592,8 @@ public class View extends javax.swing.JFrame {
     public void imprimirEstado() {
         System.out.println("Registros: " + registros);
         System.out.println("Memoria: " + memoria);
+        
+        
         System.out.println("-------------------------");
     }
 
@@ -462,15 +633,30 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JButton btn_cargar;
     private javax.swing.JButton btn_ejecutar;
     private javax.swing.JButton btn_guardar;
+    private javax.swing.JButton btn_guardar1;
+    private javax.swing.JButton btn_guardar2;
+    private javax.swing.JButton btn_guardar3;
     private javax.swing.JButton btn_validar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel panel_inferior;
+    private javax.swing.JTextArea txt_consola;
     private javax.swing.JTextArea txt_editor;
     // End of variables declaration//GEN-END:variables
 }
